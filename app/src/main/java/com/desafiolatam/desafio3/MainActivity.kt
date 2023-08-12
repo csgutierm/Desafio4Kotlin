@@ -66,10 +66,6 @@ class MainActivity : AbstractActivity() , OnCardClickListener {
 
         mediaPlayer.start()
         handler.post(updateCurrentTimeRunnable)
-        //isPlaying = true
-        //startTimer()
-
-
 
         binding.playButton.setOnClickListener {
             if (!mediaPlayer.isPlaying) {

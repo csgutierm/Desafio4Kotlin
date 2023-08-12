@@ -1,12 +1,37 @@
 package com.desafiolatam.desafio3
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
 import com.desafiolatam.desafio3.databinding.ActivityMainBinding
 
 class MainActivity : AbstractActivity() , OnCardClickListener {
 
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var mediaPlayer: MediaPlayer
+
+    private val completionListener = MediaPlayer.OnCompletionListener {
+        mediaPlayer.seekTo(0)
+        mediaPlayer.start()
+        isPlaying = true
+        handler.post(updateCurrentTimeRunnable)
+    }
+
+    private val handler = Handler()
+
+    private val updateCurrentTimeRunnable = object : Runnable {
+        override fun run() {
+            if (mediaPlayer.isPlaying) {
+                showCurrentTime()
+                handler.postDelayed(this, 1000) // Actualizar cada 1 segundo
+            }
+        }
+    }
+
+
+    private var isPlaying = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,26 +42,51 @@ class MainActivity : AbstractActivity() , OnCardClickListener {
         setContentView(binding.root)
 
         binding.cardView1.setOnClickListener {
-            //startActivity(Intent(this, SecondActivity::class.java))
             onCardClick(1)
         }
 
         binding.cardView2.setOnClickListener {
-            //startActivity(Intent(this, ThirdActivity::class.java))
             onCardClick(2)
         }
 
         binding.cardView3.setOnClickListener {
-            //startActivity(Intent(this, FourthActivity::class.java))
             onCardClick(3)
         }
 
         binding.cardView4.setOnClickListener {
-            //startActivity(Intent(this, FifthActivity::class.java))
             onCardClick(4)
         }
 
         showToast("¡Bienvenido!")
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.song)
+        mediaPlayer.setOnCompletionListener(completionListener)//completada la canción
+
+        mediaPlayer.setVolume(1f, 1f)
+
+        mediaPlayer.start()
+        handler.post(updateCurrentTimeRunnable)
+        //isPlaying = true
+        //startTimer()
+
+
+
+        binding.playButton.setOnClickListener {
+            if (!mediaPlayer.isPlaying) {
+                mediaPlayer.start()
+                isPlaying = true
+                handler.post(updateCurrentTimeRunnable)
+            }
+        }
+
+        binding.pauseButton.setOnClickListener {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
+                isPlaying = false
+                handler.removeCallbacks(updateCurrentTimeRunnable)
+            }
+        }
+
     }
 
     override fun onBackButtonClicked() {
@@ -54,5 +104,14 @@ class MainActivity : AbstractActivity() , OnCardClickListener {
         }
         startActivity(intent)
     }
+
+    private fun showCurrentTime() {
+        val currentPosition = mediaPlayer.currentPosition
+        val minutes = currentPosition / 1000 / 60
+        val seconds = currentPosition / 1000 % 60
+        val timerText = String.format("%02d:%02d", minutes, seconds)
+        binding.timerTextView.text = timerText
+    }
+
 
 }

@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <drawable name="copy1">copy1</drawable>
-    <drawable name="copy2">copy2</drawable>
-    <drawable name="copy3">copy3</drawable>
-    <drawable name="copy4">copy4</drawable>
-    <drawable name="copy5">copy5</drawable>
+
 </resources>

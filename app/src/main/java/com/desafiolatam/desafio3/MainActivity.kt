@@ -40,7 +40,7 @@ class MainActivity : AbstractActivity() , OnCardClickListener {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+/*
         binding.cardView1.setOnClickListener {
             onCardClick(1)
         }
@@ -57,13 +57,30 @@ class MainActivity : AbstractActivity() , OnCardClickListener {
             onCardClick(4)
         }
 
+        binding.cardView5.setOnClickListener {
+            onCardClick(5)
+        }
+*/
+        for (i in 1..5) {
+            val cardView = when (i) {
+                1 -> binding.cardView1
+                2 -> binding.cardView2
+                3 -> binding.cardView3
+                4 -> binding.cardView4
+                5 -> binding.cardView5
+                else -> null
+            }
+
+            cardView?.setOnClickListener {
+                onCardClick(i)
+            }
+        }
+
         showToast("¡Bienvenido!")
 
         mediaPlayer = MediaPlayer.create(this, R.raw.song)
         mediaPlayer.setOnCompletionListener(completionListener)//completada la canción
-
         mediaPlayer.setVolume(1f, 1f)
-
         mediaPlayer.start()
         handler.post(updateCurrentTimeRunnable)
 
@@ -96,6 +113,7 @@ class MainActivity : AbstractActivity() , OnCardClickListener {
             2 -> Intent(this, ThirdActivity::class.java)
             3 -> Intent(this, FourthActivity::class.java)
             4 -> Intent(this, FifthActivity::class.java)
+            5 -> Intent(this, SixthActivity::class.java)
             else -> throw IllegalArgumentException("Card number not recognized")
         }
         startActivity(intent)
